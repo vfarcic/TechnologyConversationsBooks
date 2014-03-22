@@ -69,6 +69,7 @@ public class BookTest extends CommonTest {
 
     @Test
     public void linkShouldHaveGetter() {
+        book.setLink(link);
         assertThat(book.getLink(), is(equalTo(link)));
     }
 

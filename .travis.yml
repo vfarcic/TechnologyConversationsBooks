@@ -1,5 +1,8 @@
 language: java
 
+before_install:
+- chmod +x gradlew
+
 notifications:
   email:
   - viktor@farcic.com
