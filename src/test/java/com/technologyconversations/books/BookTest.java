@@ -8,73 +8,42 @@ import static org.hamcrest.Matchers.*;
 public class BookTest extends CommonTest {
 
     @Test
-    public void idShouldHaveGetter() {
-        assertThat(book.getId(), is(equalTo(id)));
-    }
-
-    @Test
-    public void idShouldHaveSetter() {
+    public void idShouldHaveSetterAndGetter() {
         int expected = 123;
         book.setId(expected);
         assertThat(book.getId(), is(equalTo(expected)));
     }
 
     @Test
-    public void imageShouldHaveGetter() {
-        assertThat(book.getImage(), is(equalTo(image)));
-    }
-
-    @Test
-    public void imageShouldHaveSetter() {
+    public void imageShouldHaveSetterAndGetter() {
         String expected = "new_path/image.png";
         book.setImage(expected);
         assertThat(book.getImage(), is(equalTo(expected)));
     }
 
     @Test
-    public void titleShouldHaveGetter() {
-        assertThat(book.getTitle(), is(equalTo(title)));
-    }
-
-    @Test
-    public void titleShouldHaveSetter() {
+    public void titleShouldHaveSetterAndGetter() {
         String expected = "new title";
         book.setTitle(expected);
         assertThat(book.getTitle(), is(equalTo(expected)));
     }
 
     @Test
-    public void authorShouldHaveGetter() {
-        assertThat(book.getAuthor(), is(equalTo(author)));
-    }
-
-    @Test
-    public void authorShouldHaveSetter() {
+    public void authorShouldHaveSetterAndGetter() {
         String expected = "new author";
         book.setAuthor(expected);
         assertThat(book.getAuthor(), is(equalTo(expected)));
     }
 
     @Test
-    public void priceShouldHaveGetter() {
-        assertThat(book.getPrice(), is(equalTo(price)));
-    }
-
-    @Test
-    public void priceShouldHaveSetter() {
+    public void priceShouldHaveSetterAndGetter() {
         double expected = 123.45;
         book.setPrice(expected);
         assertThat(book.getPrice(), is(equalTo(expected)));
     }
 
     @Test
-    public void linkShouldHaveGetter() {
-        book.setLink(link);
-        assertThat(book.getLink(), is(equalTo(link)));
-    }
-
-    @Test
-    public void linkShouldHaveSetter() {
+    public void linkShouldHaveSetterAndGetter() {
         String expected = "new link";
         book.setLink(expected);
         assertThat(book.getLink(), is(equalTo(expected)));

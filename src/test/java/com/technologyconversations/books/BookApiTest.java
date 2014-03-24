@@ -17,8 +17,7 @@ import static org.hamcrest.Matchers.*;
 public class BookApiTest extends CommonTest {
 
     private static HttpServer server;
-    private WebTarget target, itemsTarget;
-    private Client client;
+    private WebTarget itemsTarget;
     private ObjectMapper objectMapper;
 
     @BeforeClass
@@ -28,8 +27,8 @@ public class BookApiTest extends CommonTest {
 
     @Before
     public void beforeBookApiTest() throws Exception {
-        client = ClientBuilder.newClient();
-        target = client.target("http://localhost:8080/api/");
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:8080/api/");
         itemsTarget = target.path("v1/items");
         objectMapper = new ObjectMapper();
     }
@@ -65,35 +64,27 @@ public class BookApiTest extends CommonTest {
 
     @Test
     public void getV1ItemsShouldStartFromSpecifiedFirstResult() throws Exception {
-        int size = 10;
-        int firstResult = 5;
-        int expected = size - firstResult;
-        insertBooks(size);
-        String json = itemsTarget.queryParam("offset", firstResult).request().get(String.class);
+        insertBooks(10);
+        String json = requestItems(5, 0);
         List<Book> actual = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Book.class));
-        assertThat(actual.size(), is(expected));
+        assertThat(actual.size(), is(5));
     }
 
     @Test
     public void getV1ItemsShouldReturnSpecifiedMaximumNumberOfBooks() throws Exception {
-        int size = 10;
-        int maxResult = 7;
-        insertBooks(size);
-        String json = itemsTarget.queryParam("count", maxResult).request().get(String.class);
+        insertBooks(10);
+        String json = requestItems(0, 7);
         List<Book> actual = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Book.class));
-        assertThat(actual.size(), is(maxResult));
+        assertThat(actual.size(), is(7));
     }
 
     @Test
     public void getV1ItemsShouldReturnSpecifiedMaximumNumberOfBooksAndSkipToTheSpecifiedFirstResult() throws Exception {
-        int size = 20;
-        int firstResult = 5;
-        int maxResult = 7;
-        insertBooks(size);
-        String json = itemsTarget.queryParam("offset", firstResult).queryParam("count", maxResult).request().get(String.class);
+        insertBooks(20);
+        String json = requestItems(5, 7);
         List<Book> actual = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Book.class));
-        assertThat(actual.size(), is(maxResult));
-        assertThat(actual.get(0).getId(), is(equalTo(firstResult + 1)));
+        assertThat(actual.size(), is(7));
+        assertThat(actual.get(0).getId(), is(equalTo(6)));
     }
 
     @Test
@@ -157,6 +148,16 @@ public class BookApiTest extends CommonTest {
         bookDao.saveOrUpdateBook(books.get(0));
         itemsTarget.path("/" + books.get(0).getId()).request().delete();
         assertThat(bookDao.getAllBooks().size(), is(books.size() - 1));
+    }
+
+    private String requestItems(int firstResult, int maxResult) {
+        if (firstResult > 0) {
+            itemsTarget = itemsTarget.queryParam("offset", firstResult);
+        }
+        if (maxResult > 0) {
+            itemsTarget = itemsTarget.queryParam("count", maxResult);
+        }
+        return itemsTarget.request().get(String.class);
     }
 
 }

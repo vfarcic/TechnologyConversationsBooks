@@ -1,31 +1,35 @@
 package com.technologyconversations.books;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class BookDaoTest extends CommonTest {
 
     @Before
     public void beforeBookDaoTest() {
-        bookDao.deleteAllBooks();
         bookDao.saveOrUpdateBook(book);
+    }
+
+    @After
+    public void afterBookDaoTest() {
+        bookDao.deleteAllBooks();
+    }
+
+    @Test
+    public void getAllBooksShouldReturnAllBooks() {
+        assertThat(bookDao.getAllBooks().size(), is(equalTo(1)));
     }
 
     @Test
     public void deleteAllBooksShouldDeleteAllBooks() {
         bookDao.deleteAllBooks();
         assertThat(bookDao.getAllBooks().size(), is(equalTo(0)));
-    }
-
-    @Test
-    public void getAllBooksShouldReturnAllBooks() {
-        assertThat(bookDao.getAllBooks().size(), is(equalTo(1)));
     }
 
     @Test
@@ -38,6 +42,12 @@ public class BookDaoTest extends CommonTest {
     public void getAllBooksShouldReturnsBooksWithTitle() {
         Book actual = bookDao.getAllBooks().get(0);
         assertThat(actual.getTitle(), is(equalTo(title)));
+    }
+
+    @Test
+    public void getAllBooksShouldReturnsBooksWithoutAuthor() {
+        Book actual = bookDao.getAllBooks().get(0);
+        assertThat(actual.getAuthor(), is(nullValue()));
     }
 
     @Test

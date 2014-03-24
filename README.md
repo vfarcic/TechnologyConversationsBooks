@@ -24,7 +24,7 @@ $ gradle distZip
 
 Resulting ZIP file contains bin directory with OS specific startup scripts.
 API can be seen through the [WADL](http://localhost:8080/api/application.wadl).
-           t
+
 To create WAR:
 
 ```shell
