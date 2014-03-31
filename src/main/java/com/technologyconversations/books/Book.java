@@ -1,9 +1,6 @@
 package com.technologyconversations.books;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
@@ -17,6 +14,7 @@ public class Book {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private int id;
     public int getId() {

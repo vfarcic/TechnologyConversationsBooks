@@ -12,6 +12,10 @@ public class Server {
 
     public static final String BASE_API_URI = "http://localhost:8080/api/";
 
+    public boolean getFileCacheEnabled() {
+        return false;
+    }
+
     public static void main(String[] args) throws Exception {
         Server server = new Server();
         final HttpServer httpServer = server.startServer();
@@ -23,12 +27,14 @@ public class Server {
     public HttpServer startServer() {
         final ResourceConfig rc = new ResourceConfig().packages("com.technologyconversations.books");
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_API_URI), rc);
-        server.getServerConfiguration().addHttpHandler(getHttpHandler(), "/public");
+        server.getServerConfiguration().addHttpHandler(getHttpHandler(), "/page");
         return server;
     }
 
     public HttpHandler getHttpHandler() {
-        return new StaticHttpHandler("src/main/resources/webapp/");
+        StaticHttpHandler handler = new StaticHttpHandler("src/main/resources/webapp/");
+        handler.setFileCacheEnabled(getFileCacheEnabled());
+        return handler;
     }
 
 }

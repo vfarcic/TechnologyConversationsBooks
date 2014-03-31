@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Books</title>
+    <script src="/page/javascripts/angular.min.js"></script>
+    <script src="/page/javascripts/jquery-2.1.0.min.js"></script>
+    <script src="/page/javascripts/bootstrap.min.js"></script>
+    <script src="/page/javascripts/ui-bootstrap-tpls-0.10.0.min.js"></script>
+    <script src="/page/javascripts/books.js"></script>
+    <link href="/page/stylesheets/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app="booksModule">
+    <div class="container-fluid" ng-controller="booksCtrl">
+        <div class="row">
+            <div class="col-md-4">
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                    <tr>
+                        <th><a href="#" ng-click="newBook()">New Book</a></th>
+                    </tr>
+                    </tbody>
+                    <tbody ng-repeat="book in books">
+                    <tr>
+                        <td>
+                            <a href="#" ng-click="openBook(book.id)">{{book.title}}</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-8">
+                <form class="form-horizontal" role="form" id="bookForm" name="bookForm" novalidate="novalidate">
+                    <div>
+                        {{book.id}}
+                    </div>
+                    <div class="form-group" ng-class="cssClass(bookForm.title)">
+                        <label for="title">Title</label>
+                        <input id="title" name="title" class="form-control" type="text" ng-model="book.title" placeholder="Book Title" required="true">
+                    </div>
+                    <div class="form-group" ng-class="cssClass(bookForm.author)">
+                        <label for="author">Author</label>
+                        <input id="author" name="author" class="form-control" type="text" ng-model="book.author" placeholder="Book Author" required="true">
+                    </div>
+                    <div class="form-group" ng-class="cssClass(bookForm.image)">
+                        <label for="image">Image URL</label>
+                        <input id="image" name="image" class="form-control" type="text" ng-model="book.image" placeholder="Book Image URL">
+                    </div>
+                    <div class="form-group" ng-class="cssClass(bookForm.price)">
+                        <label for="price">Price</label>
+                        <input id="price" name="price" class="form-control" type="text" ng-model="book.price" placeholder="Book Price" required="true" ng-pattern="pricePattern()">
+                    </div>
+                    <div class="help-block" ng-show="bookForm.price.$error.pattern">
+                        Price must be any number of digits followed with dot and two digits (i.e. 1223.45)
+                    </div>
+                    <button class="btn btn-primary" ng-class="cssClassButton(bookForm)" ng-disabled="!isValid(bookForm)" ng-click="saveBook()" type="button">Save</button>
+                    <button class="btn btn-primary" ng-disabled="!canRevertBook()" ng-click="revertBook()" type="button">Revert</button>
+                    <button class="btn btn-primary" ng-disabled="!canDeleteBook()" ng-click="deleteBook()" type="button">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

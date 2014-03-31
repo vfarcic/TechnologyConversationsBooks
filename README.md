@@ -30,3 +30,10 @@ To create WAR:
 ```shell
 $ gradle war
 ```
+
+## Pending
+
+Server side validation
+Client side books pagination
+$http failures
+Delete confirmation
