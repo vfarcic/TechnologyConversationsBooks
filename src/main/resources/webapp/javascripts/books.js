@@ -15,6 +15,21 @@ angular.module('booksModule', [])
                 $scope.newBook();
             });
         };
+        $scope.openBook = function(bookId) {
+            $http.get('/api/v1/items/' + bookId).then(function(response) {
+                $scope.book = response.data;
+                $scope.originalBook = angular.copy($scope.book);
+            });
+        };
+        $scope.revertBook = function() {
+            $scope.book = angular.copy($scope.originalBook);
+        };
+        $scope.deleteBook = function() {
+            $http.delete('/api/v1/items/' + $scope.book.id).then(function() {
+                $scope.listBooks();
+                $scope.newBook();
+            });
+        };
         $scope.cssClass = function(ngModelController) {
             return {
                 'has-error': ngModelController.$invalid,
@@ -30,29 +45,14 @@ angular.module('booksModule', [])
         $scope.isValid = function(ngModelController) {
             return ngModelController.$valid;
         };
-        $scope.pricePattern = function() {
-            return (/^[\d]+\.\d\d$/);
-        };
-        $scope.openBook = function(bookId) {
-            $http.get('/api/v1/items/' + bookId).then(function(response) {
-                $scope.book = response.data;
-                $scope.originalBook = angular.copy($scope.book);
-            });
-        };
-        $scope.revertBook = function() {
-            $scope.book = angular.copy($scope.originalBook);
-        };
         $scope.canRevertBook = function() {
             return !angular.equals($scope.book, $scope.originalBook);
         };
         $scope.canDeleteBook = function() {
             return (typeof $scope.book !== 'undefined' && typeof $scope.book.id !== 'undefined');
         };
-        $scope.deleteBook = function() {
-            $http.delete('/api/v1/items/' + $scope.book.id).then(function() {
-                $scope.listBooks();
-                $scope.newBook();
-            });
+        $scope.pricePattern = function() {
+            return (/^[\d]+\.\d\d$/);
         };
         $scope.listBooks();
         $scope.newBook();

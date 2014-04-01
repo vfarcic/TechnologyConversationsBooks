@@ -65,55 +65,6 @@ describe('storiesModule controllers', function() {
             });
         });
 
-        describe('cssClass method', function() {
-            it('should return has-error true and has-success false when ngModelController is invalid', function() {
-                element.$invalid = true;
-                element.$valid = false;
-                expect(scope.cssClass(element)).toEqual({'has-error': true, 'has-success': false});
-            });
-            it('should return has-error false and has-success true when ngModelController is valid and dirty', function() {
-                element.$invalid = false;
-                element.$valid = true;
-                expect(scope.cssClass(element)).toEqual({'has-error': false, 'has-success': true});
-            });
-        });
-
-        describe('cssClassButton method', function() {
-            beforeEach(
-                inject(function($compile) {
-                    form = $compile('<element>')(scope);
-                })
-            );
-            it('should return btn-danger true and btn-success false when ngModelController is invalid', function() {
-                element.$invalid = true;
-                element.$valid = false;
-                expect(scope.cssClassButton(element)).toEqual({'btn-danger': true, 'btn-success': false});
-            });
-            it('should return btn-danger false and btn-success true when ngModelController is valid and dirty', function() {
-                element.$invalid = false;
-                element.$valid = true;
-                expect(scope.cssClassButton(element)).toEqual({'btn-danger': false, 'btn-success': true});
-            });
-        });
-
-        describe('isValid method', function() {
-           it('should return false if ngModelController is invalid', function() {
-               element.$invalid = true;
-               element.$valid = false;
-               expect(scope.isValid(element)).toEqual(false);
-           });
-        });
-
-        describe('pricePattern method', function() {
-            it('should allow any number of digits followed with dot and two digits (i.e. 1223.45)', function() {
-                expect('123.45').toMatch(scope.pricePattern());
-                expect('123.').not.toMatch(scope.pricePattern());
-                expect('123').not.toMatch(scope.pricePattern());
-                expect('.45').not.toMatch(scope.pricePattern());
-                expect('.').not.toMatch(scope.pricePattern());
-            });
-        });
-
         describe('openBook method', function() {
             beforeEach(
                 function() {
@@ -135,6 +86,58 @@ describe('storiesModule controllers', function() {
                scope.originalBook = book1;
                scope.revertBook();
                expect(scope.book).toEqual(book1);
+           });
+        });
+
+        describe('deleteBook method', function() {
+            var books;
+            beforeEach(function() {
+                scope.books = [listBook1, listBook2, listBook3];
+                scope.book = listBook3;
+                httpBackend.expectDELETE('/api/v1/items/' + scope.book.id).respond();
+                httpBackend.expectGET('/api/v1/items').respond([listBook2, listBook3]);
+                scope.deleteBook();
+                httpBackend.flush();
+            });
+            it('should update books', function() {
+                expect(scope.books).toEqual([listBook2, listBook3]);
+            });
+            it('should set book to {}', function() {
+                expect(scope.book).toEqual({});
+            });
+        });
+
+        describe('cssClass method', function() {
+            it('should return has-error true and has-success false when ngModelController is invalid', function() {
+                element.$invalid = true;
+                element.$valid = false;
+                expect(scope.cssClass(element)).toEqual({'has-error': true, 'has-success': false});
+            });
+            it('should return has-error false and has-success true when ngModelController is valid and dirty', function() {
+                element.$invalid = false;
+                element.$valid = true;
+                expect(scope.cssClass(element)).toEqual({'has-error': false, 'has-success': true});
+            });
+        });
+
+        describe('cssClassButton method', function() {
+            it('should return btn-danger true and btn-success false when ngModelController is invalid', function() {
+                element.$invalid = true;
+                element.$valid = false;
+                expect(scope.cssClassButton(element)).toEqual({'btn-danger': true, 'btn-success': false});
+            });
+            it('should return btn-danger false and btn-success true when ngModelController is valid and dirty', function() {
+                element.$invalid = false;
+                element.$valid = true;
+                expect(scope.cssClassButton(element)).toEqual({'btn-danger': false, 'btn-success': true});
+            });
+        });
+
+        describe('isValid method', function() {
+           it('should return false if ngModelController is invalid', function() {
+               element.$invalid = true;
+               element.$valid = false;
+               expect(scope.isValid(element)).toEqual(false);
            });
         });
 
@@ -161,21 +164,13 @@ describe('storiesModule controllers', function() {
             });
         });
 
-        describe('deleteBook method', function() {
-            var books;
-            beforeEach(function() {
-                scope.books = [listBook1, listBook2, listBook3];
-                scope.book = listBook3;
-                httpBackend.expectDELETE('/api/v1/items/' + scope.book.id).respond();
-                httpBackend.expectGET('/api/v1/items').respond([listBook2, listBook3]);
-                scope.deleteBook();
-                httpBackend.flush();
-            });
-            it('should update books', function() {
-                expect(scope.books).toEqual([listBook2, listBook3]);
-            });
-            it('should set book to {}', function() {
-                expect(scope.book).toEqual({});
+        describe('pricePattern method', function() {
+            it('should allow any number of digits followed with dot and two digits (i.e. 1223.45)', function() {
+                expect('123.45').toMatch(scope.pricePattern());
+                expect('123.').not.toMatch(scope.pricePattern());
+                expect('123').not.toMatch(scope.pricePattern());
+                expect('.45').not.toMatch(scope.pricePattern());
+                expect('.').not.toMatch(scope.pricePattern());
             });
         });
 
